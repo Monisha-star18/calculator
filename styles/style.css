@@ -56,4 +56,16 @@
     .calculation-window {
         height: 100px;
     }
+
+    #cursor
+    {
+        font-size: 20px;
+    }
+    
+    .typingSpace
+    {
+        font-size: 20px;
+         padding: 0;
+        margin: 0;
+    }
 }

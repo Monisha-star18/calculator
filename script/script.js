@@ -17,5 +17,6 @@ $(".num-pallet-sy-btn").click(function()
 
 
 $(".num-pallet-btn").click(function(){
+    let clickedButtonValue = $(this).text()
     
 })
