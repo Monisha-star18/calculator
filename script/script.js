@@ -90,3 +90,57 @@ $("#eqaulTo").click(function () {
 });
 
 
+const HISTORY_KEY = "calcHistory";
+const HISTORY_LIMIT = 20;
+
+let history = [];
+try {
+    history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
+} catch (e) {
+    history = [];
+}
+
+function saveHistory() {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+}
+
+function renderHistory() {
+    let $list = $("#historyItems");
+    if (history.length === 0) {
+        $list.html('<div class="history-empty">No calculations yet</div>');
+        return;
+    }
+    let rows = history.slice().reverse().map(function (item, i) {
+        let realIndex = history.length - 1 - i;
+        return '<div class="history-item" data-index="' + realIndex + '">' +
+            item.expr + ' = ' + item.result +
+            '</div>';
+    });
+    $list.html(rows.join(""));
+}
+
+function addHistory(expr, result) {
+    history.push({ expr: expr, result: String(result) });
+    if (history.length > HISTORY_LIMIT) {
+        history = history.slice(history.length - HISTORY_LIMIT);
+    }
+    saveHistory();
+    renderHistory();
+}
+
+renderHistory();
+
+// open/close the history dropdown
+$("#historyToggle").click(function () {
+    $("#historyPanel").slideToggle(150);
+});
+
+// click a past entry to load its result back into the display
+$("#historyItems").on("click", ".history-item", function () {
+    let idx = $(this).data("index");
+    let item = history[idx];
+    if (item) {
+        $(".typingSpace").val(item.result);
+    }
+});
+
