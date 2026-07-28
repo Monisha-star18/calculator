@@ -4,3 +4,56 @@
 {
     height: 150px;
 }
+
+.num-pallet-btn , .num-pallet-sy-btn
+{
+    border: 2px solid white;
+    border-radius: 50% !important;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-weight: 800;
+    transition: all 0.4s ease;
+    font-size: 20px;
+
+}
+
+.num-pallet-btn:hover , .num-pallet-sy-btn:hover{
+    border: 2px solid black;
+}
+
+.num-pallet-btn.selected  , .num-pallet-sy-btn.selectedsy{
+    background-color: black;
+    color: white;
+}
+
+#cursor
+{
+    font-size: 70px;
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink
+{
+    50%{ opacity: 0; }
+}
+    
+.typingSpace
+{
+    font-size: 70px;
+    padding: 0;
+    margin: 0;
+}
+
+@media (max-width: 576px) {
+    .num-pallet-btn , .num-pallet-sy-btn{
+        font-size: 15px;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .calculation-window {
+        height: 100px;
+    }
+}
