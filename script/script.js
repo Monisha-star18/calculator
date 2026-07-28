@@ -19,18 +19,19 @@ $(".num-pallet-sy-btn").click(function()
 $(".num-pallet-btn").click(function(){
     if (this.id != 'backspace')
     {
-        let clickedButtonValue = $(this).text()
+        let clickedButtonValue = $(this).text().trim()
         $(".typingSpace").val($(".typingSpace").val() + clickedButtonValue)
     }
 })
 
 // display the clicked symbols on calculator window 
 $(".num-pallet-sy-btn").click(function(){
-    if (this.id != 'clear' && this.id != 'bracket' && this.id != 'eqaulTo')
+    if (this.id != 'clear' && this.id != 'eqaulTo')
     {
-        let clickedButtonValue = $(this).text()
+        let clickedButtonValue = $(this).text().trim()
         $(".typingSpace").val($(".typingSpace").val() + clickedButtonValue)
     }
+
 })
 
 // AC clear all
@@ -48,3 +49,44 @@ $("#backspace").click(function() {
     //push again
     $(".typingSpace").val(editedValue)
 });
+
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+    }
+});
+
+//equal
+let expressionList = {"2+2" : "5"}
+$("#eqaulTo").click(function () {
+    let expression = $(".typingSpace").val();
+    let result 
+    try{
+        result = eval(expression);
+        if(!isFinite(result))
+        {
+            throw new Error ("Invalid")
+        }
+    }
+    catch(e)
+    {
+        Toast.fire({icon: 'error',title: 'Invalid expression'});
+        setTimeout(() => $(".typingSpace").val(""), 1000);
+        return;
+    }
+     
+    $(".typingSpace").val(result);
+
+    expressionList[expression] = result;
+
+    localStorage.setItem('expressionList', JSON.stringify(expressionList));
+    
+});
+
+
