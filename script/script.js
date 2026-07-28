@@ -20,7 +20,7 @@ $(".num-pallet-btn").click(function(){
     if (this.id != 'backspace')
     {
         let clickedButtonValue = $(this).text()
-        $(".typingSpace").append(clickedButtonValue)
+        $(".typingSpace").val($(".typingSpace").val() + clickedButtonValue)
     }
 })
 
@@ -29,22 +29,22 @@ $(".num-pallet-sy-btn").click(function(){
     if (this.id != 'clear' && this.id != 'bracket' && this.id != 'eqaulTo')
     {
         let clickedButtonValue = $(this).text()
-        $(".typingSpace").append(clickedButtonValue)
+        $(".typingSpace").val($(".typingSpace").val() + clickedButtonValue)
     }
 })
 
 // AC clear all
 $("#clear").click(function()
 {
-    $(".typingSpace").text("")
+    $(".typingSpace").val("")
 })
 
 // //backspace
 $("#backspace").click(function() {
     // get value from typing
-    let currentValue = $(".typingSpace").text().trim();
+    let currentValue = $(".typingSpace").val().trim();
     // remove the last elemnt
     let editedValue = currentValue.slice(0, -1);
     //push again
-    $(".typingSpace").text(editedValue);
+    $(".typingSpace").val(editedValue)
 });
