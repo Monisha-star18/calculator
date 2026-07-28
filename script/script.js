@@ -24,6 +24,7 @@ $(".num-pallet-btn").click(function(){
     }
 })
 
+// display the clicked symbols on calculator window 
 $(".num-pallet-sy-btn").click(function(){
     if (this.id != 'clear' && this.id != 'bracket' && this.id != 'eqaulTo')
     {
