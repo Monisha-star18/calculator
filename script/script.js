@@ -1,146 +1,158 @@
+// ===== Elements =====
+const display = document.getElementById('display');
+const historyBtn = document.getElementById('historyBtn');
+const historyPanel = document.getElementById('historyPanel');
+const historyItems = document.getElementById('historyItems');
+const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+const buttons = document.querySelectorAll('.btn');
 
-$(".num-pallet-btn").click(function () {
-    $(".num-pallet-btn").removeClass("selected");
-    let clickedButton = $(this)
-    clickedButton.addClass("selected");
-    setTimeout(function(){clickedButton.removeClass("selected")},1000)
-});
-
-
-$(".num-pallet-sy-btn").click(function()
-{
-    $(".num-pallet-sy-btn").removeClass("selectedsy");
-    let clickedButton = $(this)
-    clickedButton.addClass("selectedsy")
-    setTimeout(function(){clickedButton.removeClass("selectedsy")},1000)
-})
-
-// display the clicked number on calculator window 
-$(".num-pallet-btn").click(function(){
-    if (this.id != 'backspace')
-    {
-        let clickedButtonValue = $(this).text().trim()
-        $(".typingSpace").val($(".typingSpace").val() + clickedButtonValue)
-    }
-})
-
-// display the clicked symbols on calculator window 
-$(".num-pallet-sy-btn").click(function(){
-    if (this.id != 'clear' && this.id != 'eqaulTo')
-    {
-        let clickedButtonValue = $(this).text().trim()
-        $(".typingSpace").val($(".typingSpace").val() + clickedButtonValue)
-    }
-
-})
-
-// AC clear all
-$("#clear").click(function()
-{
-    $(".typingSpace").val("")
-})
-
-// //backspace
-$("#backspace").click(function() {
-    // get value from typing
-    let currentValue = $(".typingSpace").val().trim();
-    // remove the last elemnt
-    let editedValue = currentValue.slice(0, -1);
-    //push again
-    $(".typingSpace").val(editedValue)
-});
-
-const Toast = Swal.mixin({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 2000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-    }
-});
-
-//equal
-let expressionList = {"2+2" : "5"}
-$("#eqaulTo").click(function () {
-    let expression = $(".typingSpace").val();
-    let result 
-    try{
-        result = eval(expression);
-        if(!isFinite(result))
-        {
-            throw new Error ("Invalid")
-        }
-    }
-    catch(e)
-    {
-        Toast.fire({icon: 'error',title: 'Invalid expression'});
-        setTimeout(() => $(".typingSpace").val(""), 1000);
-        return;
-    }
-     
-    $(".typingSpace").val(result);
-
-    expressionList[expression] = result;
-
-    localStorage.setItem('expressionList', JSON.stringify(expressionList));
-    
-});
-
-
-const HISTORY_KEY = "calcHistory";
-const HISTORY_LIMIT = 20;
+// ===== History storage =====
+const HISTORY_KEY = 'calcHistory';
+const HISTORY_LIMIT = 5;
 
 let history = [];
 try {
-    history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
+  history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
 } catch (e) {
-    history = [];
+  history = [];
 }
 
 function saveHistory() {
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
 }
 
 function renderHistory() {
-    let $list = $("#historyItems");
-    if (history.length === 0) {
-        $list.html('<div class="history-empty">No calculations yet</div>');
-        return;
-    }
-    let rows = history.slice().reverse().map(function (item, i) {
-        let realIndex = history.length - 1 - i;
-        return '<div class="history-item" data-index="' + realIndex + '">' +
-            item.expr + ' = ' + item.result +
-            '</div>';
-    });
-    $list.html(rows.join(""));
+  if (history.length === 0) {
+    historyItems.innerHTML = '<div class="history-empty">No calculations yet</div>';
+    return;
+  }
+  historyItems.innerHTML = history
+    .slice()
+    .reverse()
+    .map((item, i) => {
+      const realIndex = history.length - 1 - i;
+      return `<div class="history-item" data-index="${realIndex}">${item.expr} = ${item.result}</div>`;
+    })
+    .join('');
 }
 
 function addHistory(expr, result) {
-    history.push({ expr: expr, result: String(result) });
-    if (history.length > HISTORY_LIMIT) {
-        history = history.slice(history.length - HISTORY_LIMIT);
-    }
-    saveHistory();
-    renderHistory();
+  history.push({ expr: expr, result: String(result) });
+  if (history.length > HISTORY_LIMIT) {
+    history = history.slice(history.length - HISTORY_LIMIT);
+  }
+  saveHistory();
+  renderHistory();
 }
 
 renderHistory();
 
-// open/close the history dropdown
-$("#historyToggle").click(function () {
-    $("#historyPanel").slideToggle(150);
+// ===== Safe expression evaluation =====
+// Only allow digits, operators, parentheses, decimal points and spaces.
+function safeEval(expr) {
+  if (!/^[0-9+\-*/%.() ]+$/.test(expr)) {
+    throw new Error('Invalid characters');
+  }
+  // eslint-disable-next-line no-new-func
+  const result = Function('"use strict"; return (' + expr + ')')();
+  if (typeof result !== 'number' || !isFinite(result)) {
+    throw new Error('Invalid result');
+  }
+  return result;
+}
+
+// ===== Simple inline error message (no external library) =====
+function showError(message) {
+  display.value = message;
+  display.classList.add('error');
+  setTimeout(() => {
+    display.value = '';
+    display.classList.remove('error');
+  }, 1200);
+}
+
+// ===== Button handling =====
+buttons.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const action = btn.dataset.action;
+    const value = btn.dataset.value;
+
+    if (action === 'clear') {
+      display.value = '';
+      return;
+    }
+
+    if (action === 'backspace') {
+      display.value = display.value.slice(0, -1);
+      return;
+    }
+
+    if (action === 'equals') {
+      const expression = display.value.trim();
+      if (!expression) return;
+      try {
+        const result = safeEval(expression);
+        display.value = result;
+        addHistory(expression, result);
+      } catch (e) {
+        showError('Error');
+      }
+      return;
+    }
+
+    // number or operator button
+    if (value !== undefined) {
+      display.value += value;
+    }
+  });
+});
+
+// ===== Keyboard support =====
+document.addEventListener('keydown', (e) => {
+  if (/^[0-9+\-*/%.()]$/.test(e.key)) {
+    display.value += e.key;
+  } else if (e.key === 'Enter' || e.key === '=') {
+    e.preventDefault();
+    document.querySelector('[data-action="equals"]').click();
+  } else if (e.key === 'Backspace') {
+    display.value = display.value.slice(0, -1);
+  } else if (e.key === 'Escape') {
+    display.value = '';
+  }
+});
+
+// ===== History panel toggle =====
+historyBtn.addEventListener('click', () => {
+  historyPanel.style.display =
+    historyPanel.style.display === 'block' ? 'none' : 'block';
 });
 
 // click a past entry to load its result back into the display
-$("#historyItems").on("click", ".history-item", function () {
-    let idx = $(this).data("index");
-    let item = history[idx];
-    if (item) {
-        $(".typingSpace").val(item.result);
-    }
+historyItems.addEventListener('click', (e) => {
+  const item = e.target.closest('.history-item');
+  if (!item) return;
+  const idx = Number(item.dataset.index);
+  const entry = history[idx];
+  if (entry) {
+    display.value = entry.result;
+  }
 });
 
+// clear history
+clearHistoryBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  history = [];
+  saveHistory();
+  renderHistory();
+});
+
+// click outside to close the history panel
+document.addEventListener('click', (e) => {
+  if (
+    historyPanel.style.display === 'block' &&
+    !historyPanel.contains(e.target) &&
+    e.target !== historyBtn
+  ) {
+    historyPanel.style.display = 'none';
+  }
+});
