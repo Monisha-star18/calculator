@@ -8,35 +8,40 @@ const buttons = document.querySelectorAll('.btn');
 
 // ===== History storage =====
 const HISTORY_KEY = 'calcHistory';
-const HISTORY_LIMIT = 5;
+const HISTORY_LIMIT = 4;
 
 let history = [];
-try {
+try 
+{
   history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
-} catch (e) {
+} 
+catch (e)
+ {
   history = [];
 }
 
-function saveHistory() {
+function saveHistory() 
+{
   localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
 }
 
-function renderHistory() {
-  if (history.length === 0) {
+function renderHistory() 
+{
+  if (history.length === 0) 
+  {
     historyItems.innerHTML = '<div class="history-empty">No calculations yet</div>';
     return;
   }
   historyItems.innerHTML = history
-    .slice()
-    .reverse()
+    .slice().reverse()
     .map((item, i) => {
       const realIndex = history.length - 1 - i;
       return `<div class="history-item" data-index="${realIndex}">${item.expr} = ${item.result}</div>`;
-    })
-    .join('');
+    }).join('');
 }
 
-function addHistory(expr, result) {
+function addHistory(expr, result) 
+{
   history.push({ expr: expr, result: String(result) });
   if (history.length > HISTORY_LIMIT) {
     history = history.slice(history.length - HISTORY_LIMIT);
@@ -65,10 +70,7 @@ function safeEval(expr) {
 function showError(message) {
   display.value = message;
   display.classList.add('error');
-  setTimeout(() => {
-    display.value = '';
-    display.classList.remove('error');
-  }, 1200);
+  setTimeout(() => {display.value = '';display.classList.remove('error');}, 1200);
 }
 
 // ===== Button handling =====

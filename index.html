@@ -3,60 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Calculator</title>
 
     <!-- Bootstrap 5 CSS -->
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"rel="stylesheet">
 
     <!-- Font Awesome -->
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.0/css/all.min.css"
-    >
+    <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.0/css/all.min.css">
 
-    <!-- Your Custom CSS -->
+    <!--  CSS -->
     <link rel="stylesheet" href="./styles/style.css">
 </head>
 
 <body>
-
-    <!-- Bootstrap:
-         min-vh-100  -> min-height: 100vh
-         d-flex      -> display: flex
-         align-items-center
-         justify-content-center
-    -->
-    <div class="calculator container-fluid">
-
+    <div class="calculator container-fluid p-3">
         <!-- Top Bar -->
         <div class="d-flex justify-content-end mb-2">
-
-            <button
-                id="historyBtn"
-                class="icon-btn btn"
-                title="History"
-            >
+            <button id="historyBtn" class="icon-btn btn" title="History">
                 <i class="fa fa-window-restore" aria-hidden="true"></i>
             </button>
-
         </div>
-
 
         <!-- Display -->
         <div class="display-wrap position-relative mb-3">
 
-            <input
-                type="text"
-                id="display"
-                class="display form-control"
-                value=""
-                readonly
-            >
-
+            <input type="text" id="display" class="display form-control" value="">
 
             <!-- History Panel -->
             <div id="historyPanel" class="history-panel">
@@ -66,166 +37,102 @@
                 </div>
 
                 <div id="historyItems" class="history-items">
-
-                    <div class="history-empty">
-                        No calculations yet
-                    </div>
-
+                    <div class="history-empty"> No calculations yet</div>
                 </div>
 
             </div>
 
         </div>
 
-
         <!-- Calculator Buttons -->
         <div class="buttons row g-2">
 
             <!-- Row 1 -->
             <div class="col-3">
-                <button
-                    class="btn op w-100"
-                    data-action="clear"
-                >
-                    AC
-                </button>
+                <button class="btn op w-100" data-action="clear">AC</button>
             </div>
 
             <div class="col-3">
-                <button
-                    class="btn op w-100"
-                    data-value="**"
-                >
-                    x^y
-                </button>
+                <button class="btn op w-100" data-value="**">x^y</button>
             </div>
 
             <div class="col-3">
-                <button
-                    class="btn op w-100"
-                    data-value="%"
-                >
-                    %
-                </button>
+                <button class="btn op w-100" data-value="%">%</button>
             </div>
 
             <div class="col-3">
-                <button
-                    class="btn op w-100"
-                    data-value="/"
-                >
-                    ÷
-                </button>
+                <button class="btn op w-100" data-value="/"> ÷</button>
             </div>
-
 
             <!-- Row 2 -->
             <div class="col-3">
-                <button class="btn num w-100" data-value="7">
-                    7
-                </button>
+                <button class="btn num w-100" data-value="7">7</button>
             </div>
 
             <div class="col-3">
-                <button class="btn num w-100" data-value="8">
-                    8
-                </button>
+                <button class="btn num w-100" data-value="8">8</button>
             </div>
 
             <div class="col-3">
-                <button class="btn num w-100" data-value="9">
-                    9
-                </button>
+                <button class="btn num w-100" data-value="9">9</button>
             </div>
 
             <div class="col-3">
-                <button class="btn op w-100" data-value="*">
-                    ×
-                </button>
+                <button class="btn op w-100" data-value="*">×</button>
             </div>
-
 
             <!-- Row 3 -->
             <div class="col-3">
-                <button class="btn num w-100" data-value="4">
-                    4
+                <button class="btn num w-100" data-value="4">4</button>
+            </div>
+
+            <div class="col-3">
+                <button class="btn num w-100" data-value="5">5
                 </button>
             </div>
 
             <div class="col-3">
-                <button class="btn num w-100" data-value="5">
-                    5
-                </button>
+                <button class="btn num w-100" data-value="6">6</button>
             </div>
 
             <div class="col-3">
-                <button class="btn num w-100" data-value="6">
-                    6
-                </button>
-            </div>
-
-            <div class="col-3">
-                <button class="btn op w-100" data-value="-">
-                    −
-                </button>
+                <button class="btn op w-100" data-value="-">−</button>
             </div>
 
 
             <!-- Row 4 -->
             <div class="col-3">
-                <button class="btn num w-100" data-value="1">
-                    1
-                </button>
+                <button class="btn num w-100" data-value="1">1</button>
             </div>
 
             <div class="col-3">
-                <button class="btn num w-100" data-value="2">
-                    2
-                </button>
+                <button class="btn num w-100" data-value="2">2</button>
             </div>
 
             <div class="col-3">
-                <button class="btn num w-100" data-value="3">
-                    3
-                </button>
+                <button class="btn num w-100" data-value="3">3</button>
             </div>
 
             <div class="col-3">
-                <button class="btn op w-100" data-value="+">
-                    +
-                </button>
+                <button class="btn op w-100" data-value="+">+</button>
             </div>
 
 
             <!-- Row 5 -->
             <div class="col-3">
-                <button class="btn num w-100" data-value="0">
-                    0
-                </button>
+                <button class="btn num w-100" data-value="0">0</button>
             </div>
 
             <div class="col-3">
-                <button class="btn num w-100" data-value=".">
-                    .
-                </button>
+                <button class="btn num w-100" data-value=".">.</button>
             </div>
 
             <div class="col-3">
-                <button
-                    class="btn op w-100"
-                    data-action="backspace"
-                >
-                    ⌫
-                </button>
+                <button class="btn op w-100" data-action="backspace"> ⌫</button>
             </div>
 
             <div class="col-3">
-                <button
-                    class="btn equals w-100"
-                    data-action="equals"
-                >
-                    =
-                </button>
+                <button class="btn equals w-100" data-action="equals">=</button>
             </div>
 
         </div>
